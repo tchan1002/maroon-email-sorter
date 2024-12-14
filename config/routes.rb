@@ -6,6 +6,9 @@ Rails.application.routes.draw do
           
   # READ
   get("/emails", { :controller => "emails", :action => "index" })
+  get("/emails/yes", { :controller => "emails", :action => "yes_index" })
+  get("/emails/no", { :controller => "emails", :action => "no_index" })
+  get("/emails/uncertain", { :controller => "emails", :action => "uncertain_index" })
   
   get("/emails/:path_id", { :controller => "emails", :action => "show" })
   

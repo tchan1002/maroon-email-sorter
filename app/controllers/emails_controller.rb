@@ -7,6 +7,30 @@ class EmailsController < ApplicationController
     render({ :template => "emails/index" })
   end
 
+  def yes_index
+    matching_emails = Email.all.where({ :pitch_status => "Yes"})
+
+    @list_of_emails = matching_emails.order({ :created_at => :desc })
+
+    render({ :template => "emails/index" })
+  end
+
+  def no_index
+    matching_emails = Email.all.where({ :pitch_status => "No"})
+
+    @list_of_emails = matching_emails.order({ :created_at => :desc })
+
+    render({ :template => "emails/index" })
+  end
+
+  def uncertain_index
+    matching_emails = Email.all.where({ :pitch_status => "Uncertain"})
+
+    @list_of_emails = matching_emails.order({ :created_at => :desc })
+
+    render({ :template => "emails/index" })
+  end
+
   def show
     the_id = params.fetch("path_id")
 
@@ -25,7 +49,7 @@ class EmailsController < ApplicationController
     the_email.sender = params.fetch("query_sender")
     the_email.pitch_status = params.fetch("query_pitch_status")
     the_email.pitch = params.fetch("query_pitch")
-    
+
     if the_email.valid?
       the_email.save
       redirect_to("/emails", { :notice => "Email created successfully." })
