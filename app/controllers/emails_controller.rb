@@ -51,7 +51,7 @@ class EmailsController < ApplicationController
 
     ask = "is there an specific event in chicago contained within the following text that is being advertised, such as a concert, play, or gallery exhibition which may be of interest for journalistic coverage? note that for all events, we require specific dates or a range of dates. if yes, return 'Yes', if no, return 'No', if uncertain, return 'Uncertain'. your response can only be one of these three words, nothing more or less." + params.fetch("query_body")
 
-    ask2 = "Based on the last text, give me a pitch formatted as such: 'Event Name @ Location (Month/Date)', consult these following examples. New Hope Club @ Beat Kitchen (12/5), Tokyo Police Club @ House of Blues (12/7), Totally '80s HoliGAY @ Several Locations (12/6, 12/8, 12/12), Illiterate Light @ Schubas Tavern (12/7)"
+    ask2 = "Based on the above text, give me a pitch formatted as such: 'Event Name @ Location (Month/Date)', consult these following examples: New Hope Club @ Beat Kitchen (12/5), Tokyo Police Club @ House of Blues (12/7), Totally '80s HoliGAY @ Several Locations (12/6, 12/8, 12/12), Illiterate Light @ Schubas Tavern (12/7). This format is strict, do not include any extraneous information. Keep as concise as possible."
 
     client = OpenAI::Client.new(access_token: ENV.fetch("OPENAI_KEY"))
 
@@ -69,6 +69,25 @@ class EmailsController < ApplicationController
     response = messages.fetch("choices").at(0).fetch("message").fetch("content").to_s
 
     the_email.pitch_status = response
+
+    if the_email.pitch_status == "Yes"
+      messages2 = client.chat(
+        parameters: {
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You help sort emails for the arts section of the Chicago Maroon, University of Chicago's newspaper " },
+            { role: "user", content: params.fetch("query_body") + ask2 }
+          ],
+          temperature: 0
+        }
+      )
+
+      response2 = messages2.fetch("choices").at(0).fetch("message").fetch("content").to_s
+
+      the_email.pitch = response2
+    else
+      the_email.pitch = ""
+    end
 
     if the_email.valid?
       the_email.save
