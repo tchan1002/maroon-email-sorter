@@ -8,7 +8,7 @@ class EmailsController < ApplicationController
   end
 
   def yes_index
-    matching_emails = Email.all..where({ :user_id => current_user}).where({ :pitch_status => "Yes"})
+    matching_emails = Email.all.where({ :user_id => current_user}).where({ :pitch_status => "Yes"})
 
     @list_of_emails = matching_emails.order({ :created_at => :desc })
 
@@ -16,7 +16,7 @@ class EmailsController < ApplicationController
   end
 
   def no_index
-    matching_emails = Email.all..where({ :user_id => current_user}).where({ :pitch_status => "No"})
+    matching_emails = Email.all.where({ :user_id => current_user}).where({ :pitch_status => "No"})
 
     @list_of_emails = matching_emails.order({ :created_at => :desc })
 
@@ -24,7 +24,7 @@ class EmailsController < ApplicationController
   end
 
   def uncertain_index
-    matching_emails = Email.all..where({ :user_id => current_user}).where({ :pitch_status => "Uncertain"})
+    matching_emails = Email.all.where({ :user_id => current_user}).where({ :pitch_status => "Uncertain"})
 
     @list_of_emails = matching_emails.order({ :created_at => :desc })
 
