@@ -1,10 +1,10 @@
 <div>
   <div>
+
+<% if current_user != nil %>
     <h1>
       Check a new email
     </h1>
-
-<% if current_user != nil %>
     <form action="/insert_email" method="post">
       <div>
         <label for="subject_box">
@@ -48,10 +48,6 @@
         <%= alert %>
       </div>
   <% end %>
-
-<% else %>
-<p>You must sign in to start adding emails</p>
-<% end %>
 
 <hr>
 <nav>
@@ -162,4 +158,6 @@
   </div>
 </div>
 
-<hr>
+<% else %>
+<p>Sign in to check and view emails</p>
+<% end %>
