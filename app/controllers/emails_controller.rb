@@ -56,7 +56,9 @@ class EmailsController < ApplicationController
     the_email.body = params.fetch("query_body")
     the_email.sender = params.fetch("query_sender")
 
-    ask = "Is there an specific in-person event in Chicago contained within the following text that is being advertised, such as a concert, play, or gallery exhibition which may be of interest for journalistic coverage? Make sure that the event is in Chicago. Answer this question ten times independent of each other, given that your response can only be 'Yes' or 'No'. If 10 out of 10 answers are 'Yes', return 'Yes', if more than 7 out of 10 answers are 'No' return 'No', else, return 'Uncertain'. Your final answer is one word: 'Yes', 'No', or 'Uncertain', nothing more or less." + params.fetch("query_body")
+
+
+    ask = "Is there a specific in-person event in Chicago contained within the following text that is being advertised, such as a concert, play, or gallery exhibition which may be of interest for journalistic coverage? Make sure that the event is in Chicago. Given the options of 'Yes' or 'No', answer this question 10 times independently. If 80% or above is a yes, return a 'Yes', if 50% to 80% is a yes, return 'Uncertain'. If lower than 50 out of 100 answers were yeses, return a 'No'. What you return/your final answer can only be one of these three words: 'Yes', 'No', or 'Uncertain', nothing more or less." + params.fetch("query_body")
 
     ask2 = "Based on the above text, give me a pitch formatted as such: 'Event Name @ Location (Month/Date)', consult these following examples: New Hope Club @ Beat Kitchen (12/5), Tokyo Police Club @ House of Blues (12/7), Totally '80s HoliGAY @ Several Locations (12/6, 12/8, 12/12), Illiterate Light @ Schubas Tavern (12/7). This format is strict, do not include any extraneous information. Keep as concise as possible."
 
@@ -66,7 +68,7 @@ class EmailsController < ApplicationController
       parameters: {
         model: "gpt-3.5-turbo",
         messages: [
-          { role: "system", content: "You help sort emails for the arts section of the Chicago Maroon, University of Chicago's newspaper " },
+          { role: "system", content: "You help sort emails for the arts section of the Chicago Maroon, University of Chicago's newspaper. You distinguish between emails that contain a pitch vs general marketing materials." },
           { role: "user", content: ask }
         ],
         temperature: 0
@@ -82,7 +84,7 @@ class EmailsController < ApplicationController
         parameters: {
           model: "gpt-3.5-turbo",
           messages: [
-            { role: "system", content: "You help sort emails for the arts section of the Chicago Maroon, University of Chicago's newspaper " },
+            { role: "system", content: "You help sort emails for the arts section of the Chicago Maroon, University of Chicago's newspaper. You distinguish between emails that contain a pitch vs general marketing materials." },
             { role: "user", content: params.fetch("query_body") + ask2 }
           ],
           temperature: 0
@@ -91,21 +93,7 @@ class EmailsController < ApplicationController
 
       response2 = messages2.fetch("choices").at(0).fetch("message").fetch("content").to_s
       the_email.pitch = response2
-      elsif the_email.pitch_status == "Uncertain"
-        messages2 = client.chat(
-          parameters: {
-            model: "gpt-3.5-turbo",
-            messages: [
-              { role: "system", content: "You help sort emails for the arts section of the Chicago Maroon, University of Chicago's newspaper" },
-              { role: "user", content: params.fetch("query_body") + ask2 }
-            ],
-            temperature: 0
-          }
-        )
-  
-        response2 = messages2.fetch("choices").at(0).fetch("message").fetch("content").to_s
-        the_email.pitch = response2 + "(?)"
-      else
+    else
       the_email.pitch = ""
     end
 
