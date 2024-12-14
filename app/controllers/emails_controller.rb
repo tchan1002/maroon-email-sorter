@@ -47,10 +47,28 @@ class EmailsController < ApplicationController
     the_email.subject = params.fetch("query_subject")
     the_email.body = params.fetch("query_body")
     the_email.sender = params.fetch("query_sender")
-    the_email.pitch_status = params.fetch("query_pitch_status")
-    the_email.pitch = params.fetch("query_pitch")
+    
 
+    ask = "is there an specific event in chicago contained within the following text that is being advertised, such as a concert, play, or gallery exhibition which may be of interest for journalistic coverage? note that for all events, we require specific dates or a range of dates. if yes, return 'Yes', if no, return 'No', if uncertain, return 'Uncertain'. your response can only be one of these three words, nothing more or less." + params.fetch("query_body")
 
+    ask2 = "Based on the last text, give me a pitch formatted as such: 'Event Name @ Location (Month/Date)', consult these following examples. New Hope Club @ Beat Kitchen (12/5), Tokyo Police Club @ House of Blues (12/7), Totally '80s HoliGAY @ Several Locations (12/6, 12/8, 12/12), Illiterate Light @ Schubas Tavern (12/7)"
+
+    client = OpenAI::Client.new(access_token: ENV.fetch("OPENAI_KEY"))
+
+    messages = client.chat(
+      parameters: {
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You help sort emails for the arts section of the Chicago Maroon, University of Chicago's newspaper " },
+          { role: "user", content: ask }
+        ],
+        temperature: 0
+      }
+    )
+
+    response = messages.fetch("choices").at(0).fetch("message").fetch("content").to_s
+
+    the_email.pitch_status = response
 
     if the_email.valid?
       the_email.save
