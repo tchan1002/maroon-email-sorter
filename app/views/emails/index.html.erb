@@ -142,7 +142,15 @@
         </td>
 
         <td>
+          <% if an_email.pitch_status == "Yes" %>
+          <p style="color: green;"><%= an_email.pitch_status %></p>
+          <% elsif an_email.pitch_status == "No" %>
+          <p style="color: red;"><%= an_email.pitch_status %></p>
+          <% elsif an_email.pitch_status == "Uncertain" %>
+          <p style="color: orange;"><%= an_email.pitch_status %></p>
+          <% else %>
           <%= an_email.pitch_status %>
+          <% end %>
         </td>
 
          <td>
