@@ -50,9 +50,18 @@ class EmailsController < ApplicationController
     the_email.pitch_status = params.fetch("query_pitch_status")
     the_email.pitch = params.fetch("query_pitch")
 
+
+
     if the_email.valid?
       the_email.save
-      redirect_to("/emails", { :notice => "Email created successfully." })
+      if the_email.pitch_status == "Yes"
+      redirect_to("/emails", { :notice => "This email seems to contain a pitch." })
+      elsif the_email.pitch_status == "No"
+      redirect_to("/emails", { :notice => "This email does not seem to contain a pitch." })
+      else
+      redirect_to("/emails", { :notice => "It is uncertain if this email contains a pitch. Please check manually." })
+      end
+
     else
       redirect_to("/emails", { :alert => the_email.errors.full_messages.to_sentence })
     end
