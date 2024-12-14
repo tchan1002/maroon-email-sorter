@@ -11,7 +11,7 @@
           Subject
         </label>
 
-        <input type="text" id="subject_box" name="query_subject">
+        <input type="text" id="subject_box" name="query_subject" value="Event #<%= rand(1..1000).to_s %>">
       </div>
       
       <div>
@@ -19,7 +19,7 @@
           Sender
         </label>
 
-        <input type="text" id="sender_box" name="query_sender">
+        <input type="text" id="sender_box" name="query_sender" value="sender@gmail.com">
       </div>
       
       <div>
@@ -55,6 +55,7 @@
 <a href="/emails/yes">Yes</a>
 <a href="/emails/no">No</a>
 <a href="/emails/uncertain">Uncertain</a>
+<a href="/emails/pitches">Pitches</a>
 </nav>
 <hr>
 
@@ -62,14 +63,6 @@
   <div>
     <table border="1">
       <tr>
-        <th>
-          ID
-        </th>
-
-        <th>
-          User
-        </th>
-
         <th>
           Subject
         </th>
@@ -91,11 +84,7 @@
         </th>
 
         <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
+          Last Updated
         </th>
 
         <th>
@@ -104,13 +93,6 @@
 
       <% @list_of_emails.each do |an_email| %>
       <tr>
-        <td>
-          <%= an_email.id %>
-        </td>
-
-        <td>
-          <%= an_email.user_id %>
-        </td>
 
         <td>
           <%= an_email.subject %>
@@ -140,9 +122,6 @@
           <%= an_email.pitch %>
         </td>
 
-        <td>
-          <%= time_ago_in_words(an_email.created_at) %> ago
-        </td>
         <td>
           <%= time_ago_in_words(an_email.updated_at) %> ago
         </td>

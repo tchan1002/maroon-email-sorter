@@ -10,62 +10,43 @@
           Go back
         </a>
       </div>
-
-      <div>
-        <a href="/delete_email/<%= @the_email.id %>">
-          Delete email
-        </a>
-      </div>
     </div>
 
     <dl>
+     
       <dt>
-        User
-      </dt>
-      <dd>
-        <%= @the_email.user_id %>
-      </dd>
-
-      <dt>
-        Subject
+        <strong>Subject</strong>
       </dt>
       <dd>
         <%= @the_email.subject %>
       </dd>
 
       <dt>
-        Body
-      </dt>
-      <dd>
-        <%= @the_email.body %>
-      </dd>
-
-      <dt>
-        Sender
+        <strong>Sender</strong>
       </dt>
       <dd>
         <%= @the_email.sender %>
       </dd>
 
       <dt>
-        Pitch status
+        <strong>Body</strong>
+      </dt>
+      <dd>
+        <%= @the_email.body %>
+      </dd>
+
+      <dt>
+        <strong>Status</strong>
       </dt>
       <dd>
         <%= @the_email.pitch_status %>
       </dd>
 
-      <dt>
-        Created at
+       <dt>
+        <strong>Pitch</strong>
       </dt>
       <dd>
-        <%= time_ago_in_words(@the_email.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_email.updated_at) %> ago
+        <%= @the_email.pitch %>
       </dd>
     </dl>
   </div>
@@ -81,13 +62,6 @@
     </h2>
 
     <form action="/modify_email/<%= @the_email.id %>"  method="post" >
-      <div>
-        <label for="user_id_box">
-          User
-        </label>
-
-        <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_email.user_id %>">
-      </div>
 
       <div>
         <label for="subject_box">
@@ -95,6 +69,15 @@
         </label>
 
         <input type="text" id="subject_box" name="query_subject" value="<%= @the_email.subject %>">
+     
+      </div>
+
+         <div>
+        <label for="sender_box">
+          Sender
+        </label>
+
+        <input type="text" id="sender_box" name="query_sender" value="<%= @the_email.sender %>">
       </div>
 
       <div>
@@ -103,14 +86,6 @@
         </label>
 
         <textarea id="body_box" name="query_body"><%= @the_email.body %></textarea>
-      </div>
-
-      <div>
-        <label for="sender_box">
-          Sender
-        </label>
-
-        <input type="text" id="sender_box" name="query_sender" value="<%= @the_email.sender %>">
       </div>
 
       <div>
@@ -137,3 +112,9 @@
 </div>
 
 <hr>
+
+<div>
+        <a href="/delete_email/<%= @the_email.id %>">
+          Delete email
+        </a>
+ </div>
